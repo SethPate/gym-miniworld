@@ -31,7 +31,7 @@ env.domain_rand = False
 
 view_mode = 'top' if args.top_view else 'agent'
 
-env.reset()
+#env.reset()
 
 # capture start time for reporting
 start_time = time.time()
@@ -48,6 +48,7 @@ def step(action):
         print('done!')
         end_time = time.time()
         save_results(reward, end_time)
+        print('results saved.')
         pyglet.app.exit()
         env.close()
         #env.reset()
@@ -56,7 +57,7 @@ def step(action):
 
 def save_results(reward, end_time):
     course, pos, g = reward
-    distance = dist(pos,g)
+    distance = round(dist(pos,g),1)
     steps = env.step_count - 1
     duration_seconds = round(end_time - start_time)
 
@@ -72,7 +73,10 @@ def save_results(reward, end_time):
         f.write(results)
 
 def dist(a,b):
-    return 0
+    # manhattan distance
+    x0,y0 = a
+    x1,y1 = b
+    return abs(x0-x1) + abs(y0-y1)
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):

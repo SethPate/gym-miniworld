@@ -45,11 +45,11 @@ class Clarendon(MiniWorldEnv):
             (25,27,15,17,'wood','brick_wall','drywall',False),
             (21,25,12,14,'wood_planks','brick_wall',cont,False),
             (21,25,9,12,ft,'brick_wall',cont,False),
-            (25,29,9,15,'wood_planks','drywall','stucco',False),
-            (25,27,7,9,'wood','drywall','stucco',False),
-            (27,29,7,9,'wood_planks','drywall','stucco',False),
-            (25,27,4,7,'wood','drywall','stucco',False),
-            (27,29,4,7,'wood_planks','drywall','stucco',False),
+            (25,29,9,15,'wood_planks','brick_wall','stucco',False),
+            (25,27,7,9,'wood','brick_wall','stucco',False),
+            (27,29,7,9,'wood_planks','brick_wall','stucco',False),
+            (25,27,4,7,'wood','brick_wall','stucco',False),
+            (27,29,4,7,'wood_planks','brick_wall','stucco',False),
             (25,29,0,4,'wood_planks','brick_wall','stucco',False)
         ]
 
@@ -92,7 +92,7 @@ class Clarendon(MiniWorldEnv):
             (True,18,19,9,11),
             (False,19,20,25,27),
             (False,19,21,27,29),
-            (True,23,22,5,7),
+            (True,23,22,6,7),
             (False,21,23,27,29),
             (False,23,24,27,29),
         ]
@@ -193,20 +193,26 @@ class Clarendon(MiniWorldEnv):
 
         # determine which goal to set
         goals = [
-            ((hor,1,-1),(1,-2)),
+            ((hor,9.5,-17.5),(10.5,-8.5)), # easy
+            ((hor*3,26.5,-5),(27,-1)), # medium 1
+            ((hor,25.5,-16.5),(26,-6.5)), # medium 2
+            ((ver,22.5,-19.5),(2.5,-5)) # hard
             ]
 
         self.course = None
         
         course = int(input("Enter course (0-3)"))
+        breakpoint()
 
         s, g = goals[course]
 
         self.goal = g
-        dir,x1,z1 = s
-        x0 = x1 - 1
-        z0 = z1 - 1
-        self.place_agent(dir=dir,min_x=x0,max_x=x1,min_z=z0,max_z=z1)
+        dir,x,z = s
+        self.place_entity(self.agent,dir=dir,pos=[x,0,z])
+
+        go = None
+        while go != 'y':
+            go = input("When ready, type 'y' and hit 'enter' to begin.")
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
