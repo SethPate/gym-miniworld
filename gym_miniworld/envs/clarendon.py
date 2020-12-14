@@ -21,14 +21,6 @@ class Clarendon(MiniWorldEnv):
         # Allow only the movement actions
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
-        self.refreshrate = 1 / 10
-
-    def run(self):
-        while True:
-            event = self.dispatch_events()
-            sleep(1.0/self.refreshrate)
-
-
     def _gen_world(self):
         con = 'concrete'
         cont = 'concrete_tiles'
@@ -199,9 +191,29 @@ class Clarendon(MiniWorldEnv):
                 dir=d
                 )
 
-        self.place_agent(dir=hor,min_x=28,max_x=29,min_z=0,max_z=-1)
+        # determine which goal to set
+        goals = [
+            ((hor,1,-1),(1,-2)),
+            ]
+
+        self.course = None
+        
+        course = int(input("Enter course (0-3)"))
+
+        s, g = goals[course]
+
+        self.goal = g
+        dir,x1,z1 = s
+        x0 = x1 - 1
+        z0 = z1 - 1
+        self.place_agent(dir=dir,min_x=x0,max_x=x1,min_z=z0,max_z=z1)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
+        
+        if done:
+            x,y,z = self.agent.pos
+            pos = (x,z)
+            reward = (self.course, pos, self.goal)
 
         return obs, reward, done, info

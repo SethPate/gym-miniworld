@@ -713,6 +713,9 @@ class MiniWorldEnv(gym.Env):
         reward = 0
         done = False
 
+        if action == self.actions.done:
+            done = True
+
         return obs, reward, done, {}
 
     def add_rect_room(
@@ -1420,6 +1423,6 @@ class MiniWorldEnv(gym.Env):
         # we have to manually flip the buffers and dispatch events
         if mode == 'human':
             self.window.flip()
-            self.window.dispatch_events()
+            #self.window.dispatch_events()
 
         return img
